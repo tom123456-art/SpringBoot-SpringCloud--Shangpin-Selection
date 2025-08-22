@@ -21,4 +21,11 @@ public class IndexController {
     @Autowired
     private SysUserService sysUserService;
 
+    @Operation(summary = "登录接口")
+    @PostMapping(value = "/login")
+    public Result<LoginVo> login(@RequestBody LoginDto loginDto) {
+        LoginVo loginVo = sysUserService.login(loginDto) ;
+        return Result.build(loginVo , ResultCodeEnum.SUCCESS) ;
+    }
+
 }

@@ -14,7 +14,7 @@ import request from '@/utils/request'
 // 登录接口
 export const Login = data => {
   return request({
-    url: '/api/login',
+    url: '/admin/system/index/login',
     method: 'post',
     data,
   })

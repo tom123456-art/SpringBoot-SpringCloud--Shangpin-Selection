@@ -8,4 +8,7 @@ public interface SysUserService {
     LoginVo login(LoginDto loginDto);
 
     SysUser getUserInfo(String token);
+
+    //用户退出
+    void logout(String token);
 }

@@ -24,6 +24,16 @@ public class IndexController {
     @Autowired
     private ValidateCodeService validateCodeService;
 
+
+    //用户退出
+    @GetMapping(value = "/logout")
+    public Result logout(@RequestHeader(value = "token") String token) {
+        sysUserService.logout(token) ;
+        return Result.build(null , ResultCodeEnum.SUCCESS) ;
+    }
+
+
+
     //获取当前登录的用户信息
     @GetMapping(value = "/getUserInfo")
     public Result getUserInfo(@RequestHeader(name = "token") String token){

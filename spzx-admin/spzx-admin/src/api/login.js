@@ -32,6 +32,14 @@ export const GetUserinfo = () => {
 export const GetValidateCode = () => {
   return request({
     url: "/admin/system/index/generateValidateCode",
-    method: 'get'
+    method: 'get',
+  })
+}
+
+// 退出功能
+export const Logout = () => {
+  return request({
+    url: '/admin/system/index/logout',
+    method: 'get',
   })
 }

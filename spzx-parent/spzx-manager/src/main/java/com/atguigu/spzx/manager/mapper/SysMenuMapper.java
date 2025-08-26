@@ -21,4 +21,10 @@ public interface SysMenuMapper {
 
     //删除
     void delete(Long id);
+
+    //根据userId查询可以操作菜单
+    List<SysMenu> findMenusByUserId(Long userId);
+
+    //获取当前添加的父菜单
+    SysMenu selectParentMenu(Long parentId);
 }

@@ -9,6 +9,13 @@
     <sql id="columns">
         id,role_name,role_code,description,create_time,update_time,is_deleted
     </sql>
+
+    <!--    查询所有角色-->
+    <select id="findAll" resultMap="sysRoleMap">
+        select <include refid="columns" />
+        from sys_role where is_deleted = 0
+    </select>
+
     <!--    //角色删除方法-->
     <!-- 根据id删除角色数据 -->
     <update id="delete">

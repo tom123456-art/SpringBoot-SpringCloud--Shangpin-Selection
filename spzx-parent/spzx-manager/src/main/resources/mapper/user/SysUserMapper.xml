@@ -6,6 +6,8 @@
     <sql id="columns">
         id,username userName ,password,name,phone,avatar,description,status,create_time,update_time,is_deleted
     </sql>
+
+
 <!--    用户删除-->
     <update id="delete">
         update sys_user set

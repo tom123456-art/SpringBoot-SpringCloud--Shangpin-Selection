@@ -1,5 +1,6 @@
 package com.atguigu.spzx.manager.service;
 
+import com.atguigu.spzx.model.dto.system.AssginRoleDto;
 import com.atguigu.spzx.model.dto.system.LoginDto;
 import com.atguigu.spzx.model.dto.system.SysUserDto;
 import com.atguigu.spzx.model.entity.system.SysUser;
@@ -25,4 +26,7 @@ public interface SysUserService {
 
     //用户删除
     void deleteById(Long userId);
+
+    //用户分配角色
+    void doAssign(AssginRoleDto assginRoleDto);
 }

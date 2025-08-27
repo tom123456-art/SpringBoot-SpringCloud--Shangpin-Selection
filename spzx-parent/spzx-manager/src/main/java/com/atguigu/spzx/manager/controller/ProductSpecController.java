@@ -8,12 +8,20 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping(value="/admin/product/productSpec")
 public class ProductSpecController {
 
     @Autowired
     private ProductSpecService productSpecService ;
+
+    @GetMapping("findAll")
+    public Result findAll() {
+        List<ProductSpec> list = productSpecService.findAll();
+        return Result.build(list , ResultCodeEnum.SUCCESS) ;
+    }
 
     //列表
     @GetMapping("/{page}/{limit}")

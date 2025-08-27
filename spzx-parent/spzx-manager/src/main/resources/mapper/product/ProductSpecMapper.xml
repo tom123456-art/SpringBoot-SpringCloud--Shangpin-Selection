@@ -9,6 +9,13 @@
         id,spec_name,spec_value,create_time,update_time,is_deleted
     </sql>
 
+    <select id="findAll" resultMap="productSpecMap">
+        select <include refid="columns" />
+        from product_spec
+        where is_deleted = 0
+        order by id desc
+    </select>
+
 
 <!--    列表-->
     <select id="findByPage" resultMap="productSpecMap">

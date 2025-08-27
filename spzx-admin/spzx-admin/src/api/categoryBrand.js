@@ -36,3 +36,11 @@ export const DeleteCategoryBrandById = id => {
       method: 'delete',
     })
 }
+
+// 根据分类的id获取品牌数据
+export const FindBrandByCategoryId = categoryId => {
+    return request({
+      url: `${api_name}/findBrandByCategoryId/${categoryId}`,
+      method: 'get',
+    })
+}

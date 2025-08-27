@@ -10,6 +10,16 @@
         id,brand_id,category_id,create_time,update_time,is_deleted
     </sql>
 
+<!--    /根据分类id查询对应品牌数据-->
+    <select id="findBrandByCategoryId" resultType="com.atguigu.spzx.model.entity.product.Brand">
+        select
+            b.*
+        from category_brand cb
+                 inner join brand b  on b.id = cb.brand_id
+        where cb.category_id = #{categoryId} and cb.is_deleted = 0
+        order by cb.id desc
+    </select>
+
 <!--    删除-->
     <update id="deleteById">
         update category_brand set

@@ -35,3 +35,11 @@ export const DeleteProductSpecById = id => {
       method: 'delete',
     })
 }
+
+// 查询所有的产品规格数据
+export const FindAllProductSpec = () => {
+  return request({
+    url: `${api_name}/findAll`,
+    method: 'get',
+  })
+}

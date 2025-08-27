@@ -62,4 +62,7 @@ public class Product extends BaseEntity {
 	@Schema(description = "图片详情列表")
 	private String detailsImageUrls;				// 图片详情列表
 
+	private String categoryName;
+
+	private String logo;
 }

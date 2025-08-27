@@ -10,6 +10,14 @@
         id,name,logo,create_time,update_time,is_deleted
     </sql>
 
+<!--    //查询所有品牌-->
+    <select id="findAll" resultMap="brandMap">
+        select <include refid="columns" />
+        from brand
+        where is_deleted = 0
+        order by id desc
+    </select>
+
 <!--    列表-->
     <select id="findByPage" resultMap="brandMap">
         select <include refid="columns" />

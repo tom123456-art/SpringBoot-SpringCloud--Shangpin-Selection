@@ -14,4 +14,7 @@ public interface CategoryMapper {
 
     //判断每个分类是否有下一次分类
     int selectCountByParentId(Long id);
+
+    // 查询所有分类
+    List<Category> findAll();
 }

@@ -10,6 +10,14 @@
         id,name,image_url,parent_id,status,order_num,create_time,update_time,is_deleted
     </sql>
 
+<!--    // 查询所有分类-->
+    <select id="findAll" resultMap="categoryMap">
+        select <include refid="columns" />
+        from category
+        where is_deleted = 0
+        order by id
+    </select>
+
 <!--    查询下层分类-->
     <select id="selectCategoryByParentId" resultMap="categoryMap">
         select <include refid="columns" />

@@ -1,6 +1,6 @@
 <template>
     <div class="tools-div">
-      <el-button type="success" size="small" >导出</el-button>
+      <el-button type="success" size="small" @click="exportData">导出</el-button>
       <el-button type="primary" size="small" >导入</el-button>
     </div>
 
@@ -29,7 +29,7 @@
 
 <script setup>
 import { ref , onMounted} from 'vue';
-import { FindCategoryByParentId } from '@/api/category.js'
+import { FindCategoryByParentId, ExportCategoryData } from '@/api/category.js'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
 // 定义list属性模型
@@ -50,6 +50,21 @@ const fetchData = async (row, treeNode, resolve) => {
     // 返回数据
     resolve(data)
 
+}
+
+const exportData = () => {
+  // 调用 ExportCategoryData() 方法获取导出数据
+  ExportCategoryData().then(res => {
+      // 创建 Blob 对象，用于包含二进制数据
+      const blob = new Blob([res]);             
+      // 创建 a 标签元素，并将 Blob 对象转换成 URL
+      const link = document.createElement('a'); 
+      link.href = window.URL.createObjectURL(blob);
+      // 设置下载文件的名称
+      link.download = '分类数据.xlsx';
+      // 模拟点击下载链接
+      link.click();
+  })
 }
 </script>
 

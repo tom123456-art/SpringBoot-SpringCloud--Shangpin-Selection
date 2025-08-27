@@ -10,6 +10,34 @@
         id,name,image_url,parent_id,status,order_num,create_time,update_time,is_deleted
     </sql>
 
+<!--    批量保存分类-->
+    <insert id="batchInsert">
+        insert into category (
+        id,
+        name,
+        image_url,
+        parent_id,
+        status,
+        order_num,
+        create_time ,
+        update_time ,
+        is_deleted
+        ) values
+        <foreach collection="categoryList" item="item" separator="," >
+            (
+            #{item.id},
+            #{item.name},
+            #{item.imageUrl},
+            #{item.parentId},
+            #{item.status},
+            #{item.orderNum},
+            now(),
+            now(),
+            0
+            )
+        </foreach>
+    </insert>
+
 <!--    // 查询所有分类-->
     <select id="findAll" resultMap="categoryMap">
         select <include refid="columns" />

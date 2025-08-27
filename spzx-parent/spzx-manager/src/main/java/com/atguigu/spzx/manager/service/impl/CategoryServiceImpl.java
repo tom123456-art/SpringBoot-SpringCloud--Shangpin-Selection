@@ -2,6 +2,7 @@ package com.atguigu.spzx.manager.service.impl;
 
 import com.alibaba.excel.EasyExcel;
 import com.atguigu.spzx.common.exception.GuiguException;
+import com.atguigu.spzx.manager.listener.ExcelListener;
 import com.atguigu.spzx.manager.mapper.CategoryMapper;
 import com.atguigu.spzx.manager.service.CategoryService;
 import com.atguigu.spzx.model.entity.product.Category;
@@ -12,7 +13,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +75,22 @@ public class CategoryServiceImpl implements CategoryService {
             // 写出数据到浏览器端
             EasyExcel.write(response.getOutputStream(), CategoryExcelVo.class).sheet("分类数据").doWrite(categoryExcelVoList);
         }catch(Exception e){
+            e.printStackTrace();
+            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+        }
+    }
+
+    //导入
+    @Override
+    public void importData(MultipartFile file) {
+        //创建监听器对象，传递mapper对象
+        ExcelListener<CategoryExcelVo> excelListener = new ExcelListener(categoryMapper);
+        try {
+            //调用read方法读取excel数据
+            EasyExcel.read(file.getInputStream(),
+                    CategoryExcelVo.class,
+                    excelListener).sheet().doRead();
+        } catch (IOException e) {
             e.printStackTrace();
             throw new GuiguException(ResultCodeEnum.DATA_ERROR);
         }

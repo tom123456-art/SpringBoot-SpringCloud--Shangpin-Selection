@@ -55,10 +55,18 @@
                 <scope>import</scope>
             </dependency>
             <!--导入支付宝支付sdk-->
+<!--            <dependency>-->
+<!--                <groupId>com.alipay.sdk</groupId>-->
+<!--                <artifactId>alipay-sdk-java</artifactId>-->
+<!--                <version>${alipay.version}</version>-->
+<!--            </dependency>-->
+
             <dependency>
                 <groupId>com.alipay.sdk</groupId>
                 <artifactId>alipay-sdk-java</artifactId>
-                <version>${alipay.version}</version>
+                <version>4.40.418.ALL</version>
+                <scope>system</scope>
+                <systemPath>D:/java项目实训/E-commerce Platform/spzx-parent/lib/alipay-sdk-java-4.40.418.ALL.jar</systemPath>
             </dependency>
 
             <!-- mybatis和spring boot整合的起步依赖 -->

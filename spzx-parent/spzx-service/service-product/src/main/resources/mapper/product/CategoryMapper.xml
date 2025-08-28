@@ -19,7 +19,7 @@
         parent_id = 0
 --         and status = 1
         and is_deleted = 0
-        order by id
+        order by order_num
     </select>
 
     <select id="findAll" resultMap="categoryMap">

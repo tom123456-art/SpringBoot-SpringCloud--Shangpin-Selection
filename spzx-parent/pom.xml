@@ -66,7 +66,8 @@
                 <artifactId>alipay-sdk-java</artifactId>
                 <version>4.40.418.ALL</version>
                 <scope>system</scope>
-                <systemPath>D:/java项目实训/E-commerce Platform/spzx-parent/lib/alipay-sdk-java-4.40.418.ALL.jar</systemPath>
+                <!-- 使用变量代替硬编码路径 -->
+                <systemPath>${project.basedir}/lib/alipay-sdk-java-4.40.418.ALL.jar</systemPath>
             </dependency>
 
             <!-- mybatis和spring boot整合的起步依赖 -->

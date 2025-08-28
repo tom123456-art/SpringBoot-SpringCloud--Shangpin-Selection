@@ -17,7 +17,7 @@
                  inner join product p on p.id = sku.product_id
         where
             p.status = 1
---           and p.audit_status = 1
+          and p.audit_status = 1
           and sku.is_deleted = 0
           and p.is_deleted = 0
         order by sku.sale_num desc

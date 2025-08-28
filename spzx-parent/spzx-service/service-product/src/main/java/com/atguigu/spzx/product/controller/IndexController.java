@@ -20,7 +20,6 @@ import java.util.List;
 @Tag(name = "首页接口管理")
 @RestController
 @RequestMapping(value="/api/product/index")
-@CrossOrigin
 public class IndexController {
 
    @Autowired

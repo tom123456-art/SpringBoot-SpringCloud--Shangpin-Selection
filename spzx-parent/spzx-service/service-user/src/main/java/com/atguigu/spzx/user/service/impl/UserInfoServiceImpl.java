@@ -9,6 +9,7 @@ import com.atguigu.spzx.model.vo.common.ResultCodeEnum;
 import com.atguigu.spzx.model.vo.h5.UserInfoVo;
 import com.atguigu.spzx.user.mapper.UserInfoMapper;
 import com.atguigu.spzx.user.service.UserInfoService;
+import com.atguigu.spzx.utils.AuthContextUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -112,11 +113,13 @@ public class UserInfoServiceImpl implements UserInfoService {
 
 	@Override
 	public UserInfoVo getCurrentUserInfo(String token) {
-		String userInfoJSON = redisTemplate.opsForValue().get("user:spzx:" + token);
-		if(StringUtils.isEmpty(userInfoJSON)) {
-			throw new GuiguException(ResultCodeEnum.LOGIN_AUTH) ;
-		}
-		UserInfo userInfo = JSON.parseObject(userInfoJSON , UserInfo.class) ;
+//		String userInfoJSON = redisTemplate.opsForValue().get("user:spzx:" + token);
+//		if(StringUtils.isEmpty(userInfoJSON)) {
+//			throw new GuiguException(ResultCodeEnum.LOGIN_AUTH) ;
+//		}
+//		UserInfo userInfo = JSON.parseObject(userInfoJSON , UserInfo.class) ;
+		//从thredlocal获取
+		UserInfo userInfo = AuthContextUtil.getUserInfo();
 		UserInfoVo userInfoVo = new UserInfoVo();
 		BeanUtils.copyProperties(userInfo, userInfoVo);
 		return userInfoVo ;

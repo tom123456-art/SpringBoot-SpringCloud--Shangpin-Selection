@@ -85,4 +85,11 @@
         </where>
         order by id desc
     </select>
+
+    <select id="getByOrderNo" resultMap="orderInfoMap">
+        select <include refid="columns" />
+        from order_info
+        where
+        order_no = #{orderNo}
+    </select>
 </mapper>

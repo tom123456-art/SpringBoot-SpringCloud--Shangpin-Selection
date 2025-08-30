@@ -12,4 +12,5 @@ public interface PaymentInfoMapper {
     //添加
     void save(PaymentInfo paymentInfo);
 
+    void updateById(PaymentInfo paymentInfo);
 }

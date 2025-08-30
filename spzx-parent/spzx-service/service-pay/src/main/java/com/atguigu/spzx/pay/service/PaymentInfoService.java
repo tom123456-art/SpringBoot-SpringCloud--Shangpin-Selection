@@ -9,4 +9,5 @@ public interface PaymentInfoService {
     //保存支付记录
     PaymentInfo savePaymentInfo(String orderNo);
 
+    void updatePaymentStatus(Map<String, String> map, Integer payType);
 }

@@ -49,4 +49,22 @@ public class PaymentInfoServiceImpl implements PaymentInfoService {
         }
         return paymentInfo;
     }
-}
+
+    @Override
+    public void updatePaymentStatus(Map<String, String> map, Integer payType) {
+        // 查询PaymentInfo
+        PaymentInfo paymentInfo = paymentInfoMapper.getByOrderNo(map.get("out_trade_no"));
+        if (paymentInfo.getPaymentStatus() == 1) {
+            return;
+        }
+
+        //更新支付信息
+        paymentInfo.setPaymentStatus(1);
+        paymentInfo.setOutTradeNo(map.get("trade_no"));
+        paymentInfo.setCallbackTime(new Date());
+        paymentInfo.setCallbackContent(JSON.toJSONString(map));
+        paymentInfoMapper.updateById(paymentInfo);
+
+    }
+    }
+

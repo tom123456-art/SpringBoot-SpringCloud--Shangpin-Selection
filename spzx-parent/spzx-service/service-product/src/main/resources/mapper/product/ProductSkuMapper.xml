@@ -11,6 +11,10 @@
         id,sku_code,sku_name,product_id,thumb_img,sale_price,market_price,cost_price,stock_num,sale_num,sku_spec,weight,volume,status,create_time,update_time,is_deleted
     </sql>
 
+    <update id="updateSale" >
+        update product_sku set sale_num = sale_num + #{num}, stock_num = stock_num - #{num}, update_time =  now() where id = #{skuId}
+    </update>
+
     <select id="selectProductSkuBySale" resultMap="productSkuMap">
         select sku.*
         from product_sku sku

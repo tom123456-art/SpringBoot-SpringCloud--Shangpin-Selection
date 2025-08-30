@@ -63,4 +63,12 @@ public class CartController {
         cartService.addToCart(skuId, skuNum);
         return Result.build(null, ResultCodeEnum.SUCCESS);
     }
+
+    //远程调用订单结算获取购物车中选中的商品
+    @Operation(summary="选中的购物车")
+    @GetMapping(value = "/auth/getAllCkecked")
+    public List<CartInfo> getAllCkecked() {
+        List<CartInfo> list = cartService.getAllCkecked() ;
+        return list;
+    }
 }

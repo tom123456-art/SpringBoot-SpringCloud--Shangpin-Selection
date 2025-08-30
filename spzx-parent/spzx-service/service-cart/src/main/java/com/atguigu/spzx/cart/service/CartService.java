@@ -19,4 +19,6 @@ public interface CartService {
     void allCheckCart(Integer isChecked);
 
     void clearCart();
+
+    List<CartInfo> getAllCkecked();
 }

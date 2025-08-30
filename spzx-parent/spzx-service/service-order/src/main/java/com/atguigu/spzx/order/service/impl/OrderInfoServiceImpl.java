@@ -19,6 +19,8 @@ import com.atguigu.spzx.order.mapper.OrderItemMapper;
 import com.atguigu.spzx.order.mapper.OrderLogMapper;
 import com.atguigu.spzx.order.service.OrderInfoService;
 import com.atguigu.spzx.utils.AuthContextUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -155,6 +157,44 @@ public class OrderInfoServiceImpl implements OrderInfoService {
     @Override
     public OrderInfo getOrderInfo(Long orderId) {
         return orderInfoMapper.getById(orderId);
+    }
+
+    //立即购买
+    @Override
+    public TradeVo buy(Long skuId) {
+        // 查询商品
+        ProductSku productSku = productFeignClient.getBySkuId(skuId);
+        List<OrderItem> orderItemList = new ArrayList<>();
+        OrderItem orderItem = new OrderItem();
+        orderItem.setSkuId(skuId);
+        orderItem.setSkuName(productSku.getSkuName());
+        orderItem.setSkuNum(1);
+        orderItem.setSkuPrice(productSku.getSalePrice());
+        orderItem.setThumbImg(productSku.getThumbImg());
+        orderItemList.add(orderItem);
+
+        // 计算总金额
+        BigDecimal totalAmount = productSku.getSalePrice();
+        TradeVo tradeVo = new TradeVo();
+        tradeVo.setTotalAmount(totalAmount);
+        tradeVo.setOrderItemList(orderItemList);
+
+        // 返回
+        return tradeVo;
+    }
+
+    @Override
+    public PageInfo<OrderInfo> findUserPage(Integer page, Integer limit, Integer orderStatus) {
+        PageHelper.startPage(page, limit);
+        Long userId = AuthContextUtil.getUserInfo().getId();
+        List<OrderInfo> orderInfoList = orderInfoMapper.findUserPage(userId, orderStatus);
+
+        orderInfoList.forEach(orderInfo -> {
+            List<OrderItem> orderItem = orderItemMapper.findByOrderId(orderInfo.getId());
+            orderInfo.setOrderItemList(orderItem);
+        });
+
+        return new PageInfo<>(orderInfoList);
     }
 
 }

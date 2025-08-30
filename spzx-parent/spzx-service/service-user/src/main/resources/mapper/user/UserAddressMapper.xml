@@ -14,4 +14,11 @@
         where
         user_id = #{userId}
     </select>
+
+    <select id="getUserAddress" resultMap="userAddressMap">
+        select *
+        from user_address
+        where
+        id = #{id}
+    </select>
 </mapper>

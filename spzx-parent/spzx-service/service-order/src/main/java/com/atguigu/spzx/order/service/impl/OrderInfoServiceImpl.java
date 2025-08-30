@@ -1,12 +1,27 @@
 package com.atguigu.spzx.order.service.impl;
 
+import com.atguigu.spzx.common.exception.GuiguException;
 import com.atguigu.spzx.feign.cart.CartFeignClient;
+import com.atguigu.spzx.feign.product.ProductFeignClient;
+import com.atguigu.spzx.feign.user.UserFeignClient;
+import com.atguigu.spzx.model.dto.h5.OrderInfoDto;
 import com.atguigu.spzx.model.entity.h5.CartInfo;
+import com.atguigu.spzx.model.entity.order.OrderInfo;
 import com.atguigu.spzx.model.entity.order.OrderItem;
+import com.atguigu.spzx.model.entity.order.OrderLog;
+import com.atguigu.spzx.model.entity.product.ProductSku;
+import com.atguigu.spzx.model.entity.user.UserAddress;
+import com.atguigu.spzx.model.entity.user.UserInfo;
+import com.atguigu.spzx.model.vo.common.ResultCodeEnum;
 import com.atguigu.spzx.model.vo.h5.TradeVo;
+import com.atguigu.spzx.order.mapper.OrderInfoMapper;
+import com.atguigu.spzx.order.mapper.OrderItemMapper;
+import com.atguigu.spzx.order.mapper.OrderLogMapper;
 import com.atguigu.spzx.order.service.OrderInfoService;
+import com.atguigu.spzx.utils.AuthContextUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -17,6 +32,21 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
     @Autowired
     private CartFeignClient cartFeignClient ;
+
+    @Autowired
+    private ProductFeignClient productFeignClient;
+
+    @Autowired
+    private UserFeignClient userFeignClient;
+
+    @Autowired
+    private OrderInfoMapper orderInfoMapper;
+
+    @Autowired
+    private OrderItemMapper orderItemMapper;
+
+    @Autowired
+    private OrderLogMapper orderLogMapper;
 
     @Override
     public TradeVo getTrade() {
@@ -47,6 +77,84 @@ public class OrderInfoServiceImpl implements OrderInfoService {
         tradeVo.setOrderItemList(orderItemList);
         return tradeVo;
         
+    }
+
+    //生成订单接口
+    @Override
+    public Long submitOrder(OrderInfoDto orderInfoDto) {
+        // 数据校验
+        List<OrderItem> orderItemList = orderInfoDto.getOrderItemList();
+        if (CollectionUtils.isEmpty(orderItemList)) {
+            throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+        }
+
+        for (OrderItem orderItem : orderItemList) {
+            ProductSku productSku = productFeignClient.getBySkuId(orderItem.getSkuId());
+            if(productSku == null) {
+                throw new GuiguException(ResultCodeEnum.DATA_ERROR);
+            }
+            //校验库存
+            if(orderItem.getSkuNum().intValue() > productSku.getStockNum().intValue()) {
+                throw new GuiguException(ResultCodeEnum.STOCK_LESS);
+            }
+        }
+
+        // 构建订单数据，保存订单
+        UserInfo userInfo = AuthContextUtil.getUserInfo();
+        OrderInfo orderInfo = new OrderInfo();
+        //订单编号
+        orderInfo.setOrderNo(String.valueOf(System.currentTimeMillis()));
+        //用户id
+        orderInfo.setUserId(userInfo.getId());
+        //用户昵称
+        orderInfo.setNickName(userInfo.getNickName());
+        //用户收货地址信息
+
+        Long userAddressId = orderInfoDto.getUserAddressId();
+        UserAddress userAddress = userFeignClient.getUserAddress(userAddressId);
+        orderInfo.setReceiverName(userAddress.getName());
+        orderInfo.setReceiverPhone(userAddress.getPhone());
+        orderInfo.setReceiverTagName(userAddress.getTagName());
+        orderInfo.setReceiverProvince(userAddress.getProvinceCode());
+        orderInfo.setReceiverCity(userAddress.getCityCode());
+        orderInfo.setReceiverDistrict(userAddress.getDistrictCode());
+        orderInfo.setReceiverAddress(userAddress.getFullAddress());
+        //订单金额
+        BigDecimal totalAmount = new BigDecimal(0);
+        for (OrderItem orderItem : orderItemList) {
+            totalAmount = totalAmount.add(orderItem.getSkuPrice().multiply(new BigDecimal(orderItem.getSkuNum())));
+        }
+        orderInfo.setTotalAmount(totalAmount);
+        orderInfo.setCouponAmount(new BigDecimal(0));
+        orderInfo.setOriginalTotalAmount(totalAmount);
+        orderInfo.setFeightFee(orderInfoDto.getFeightFee());
+        orderInfo.setPayType(2);
+        orderInfo.setOrderStatus(0);
+        orderInfoMapper.save(orderInfo);
+
+        //保存订单明细
+        for (OrderItem orderItem : orderItemList) {
+            //设置对应的订单id
+            orderItem.setOrderId(orderInfo.getId());
+            orderItemMapper.save(orderItem);
+        }
+
+        //记录日志
+        OrderLog orderLog = new OrderLog();
+        orderLog.setOrderId(orderInfo.getId());
+        orderLog.setProcessStatus(0);
+        orderLog.setNote("提交订单");
+        orderLogMapper.save(orderLog);
+
+        // 远程调用service-cart微服务接口清空购物车数据
+        cartFeignClient.deleteChecked() ;
+
+        return orderInfo.getId();
+    }
+
+    @Override
+    public OrderInfo getOrderInfo(Long orderId) {
+        return orderInfoMapper.getById(orderId);
     }
 
 }

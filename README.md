@@ -8,11 +8,12 @@
 
 - **项目使用技术栈**
   
-后端：Spring Boot、Spring Cloud Alibaba、Redis、EasyExcel、Minio、短信平台、支付宝支付等
-前端：Vue3、ES6、Node.js、NPM、Element Plus、ECharts等
+**后端：** Spring Boot、Spring Cloud Alibaba、Redis、EasyExcel、Minio、短信平台、支付宝支付等
+
+**前端：** Vue3、ES6、Node.js、NPM、Element Plus、ECharts等
 
 - **项目前后台演示**
-
+![](assets/前后台演示.gif)
 
 ## 项目功能
 

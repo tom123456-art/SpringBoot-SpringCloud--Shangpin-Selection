@@ -1,7 +1,4 @@
 # SpringBoot-SpringCloud--Shangpin-Selection
-
-一个电子商务平台
-
 ## 项目简介
 
 项目采用B2C模式，使用SpringBoot+SpringCloud微服务架构，采用前后端分离开发模式。项目包含两个系统：**后台管理系统** 和 **前台用户系统（手机端）**，采用模块化设计，代码结构清晰，注重用户体验与界面美观。

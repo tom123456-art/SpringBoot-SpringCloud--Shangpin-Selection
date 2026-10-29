@@ -91,13 +91,16 @@ public class OrderInfoServiceImpl implements OrderInfoService {
             throw new GuiguException(ResultCodeEnum.DATA_ERROR);
         }
 
+        // 原子扣减库存：一条带 stock_num >= num 条件的 UPDATE 完成"校验+扣减"，
+        // 避免原先"先查后扣"在并发下导致的超卖。任一商品扣减失败则抛出库存不足。
         for (OrderItem orderItem : orderItemList) {
             ProductSku productSku = productFeignClient.getBySkuId(orderItem.getSkuId());
             if(productSku == null) {
                 throw new GuiguException(ResultCodeEnum.DATA_ERROR);
             }
-            //校验库存
-            if(orderItem.getSkuNum().intValue() > productSku.getStockNum().intValue()) {
+            //原子扣减库存，返回false说明库存不足
+            Boolean deductResult = productFeignClient.checkAndDeductStock(orderItem.getSkuId(), orderItem.getSkuNum());
+            if(!Boolean.TRUE.equals(deductResult)) {
                 throw new GuiguException(ResultCodeEnum.STOCK_LESS);
             }
         }
@@ -208,6 +211,8 @@ public class OrderInfoServiceImpl implements OrderInfoService {
 
     @Override
     public void updateOrderStatus(String orderNo, Integer orderStatus) {
+        // 注意：库存已在 submitOrder 提交订单时通过原子扣减预扣，此处不再重复扣减。
+        // 若后续引入订单超时取消（RocketMQ 延迟消息），需要在取消时回滚预扣库存。
         // 更新订单状态
         OrderInfo orderInfo = orderInfoMapper.getByOrderNo(orderNo);
         orderInfo.setOrderStatus(1);

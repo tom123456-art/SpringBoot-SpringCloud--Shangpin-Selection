@@ -12,7 +12,8 @@
     </sql>
 
     <update id="updateSale" >
-        update product_sku set sale_num = sale_num + #{num}, stock_num = stock_num - #{num}, update_time =  now() where id = #{skuId}
+        update product_sku set sale_num = sale_num + #{num}, stock_num = stock_num - #{num}, update_time =  now()
+        where id = #{skuId} and stock_num >= #{num}
     </update>
 
     <select id="selectProductSkuBySale" resultMap="productSkuMap">

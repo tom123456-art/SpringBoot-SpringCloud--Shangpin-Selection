@@ -24,4 +24,10 @@ public interface ProductFeignClient {
     @PostMapping("/api/product/updateSkuSaleNum")
     Boolean updateSkuSaleNum(@RequestBody List<SkuSaleDto> skuSaleDtoList);
 
+    /**
+     * 校验并原子扣减库存（防超卖）
+     */
+    @GetMapping("/api/product/checkAndDeduct/{skuId}/{num}")
+    Boolean checkAndDeductStock(@PathVariable("skuId") Long skuId, @PathVariable("num") Integer num);
+
 }

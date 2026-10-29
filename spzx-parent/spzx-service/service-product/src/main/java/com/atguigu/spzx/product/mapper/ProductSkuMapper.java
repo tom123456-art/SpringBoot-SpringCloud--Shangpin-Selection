@@ -17,5 +17,5 @@ public interface ProductSkuMapper {
 
      List<ProductSku> findByProductId(Long productId);
 
-     void updateSale(@Param("skuId") Long skuId, @Param("num") Integer num);
+     int updateSale(@Param("skuId") Long skuId, @Param("num") Integer num);
 }

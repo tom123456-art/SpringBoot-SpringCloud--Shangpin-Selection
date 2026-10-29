@@ -91,4 +91,17 @@ public class ProductServiceImpl implements ProductService {
         }
         return true;
     }
+
+    /**
+     * 校验并原子扣减库存：一条带 stock_num >= #{num} 条件的 UPDATE 完成"校验+扣减"，
+     * 影响行数=0 即库存不足，避免"先查后扣"导致的并发超卖。
+     */
+    @Override
+    public boolean checkAndDeductStock(Long skuId, Integer num) {
+        if (skuId == null || num == null || num <= 0) {
+            return false;
+        }
+        int affected = productSkuMapper.updateSale(skuId, num);
+        return affected > 0;
+    }
 }

@@ -41,6 +41,13 @@ public class ProductController {
 		return Result.build(productItemVo , ResultCodeEnum.SUCCESS);
 	}
 
+	@Operation(summary = "校验并原子扣减库存")
+	@GetMapping("checkAndDeduct/{skuId}/{num}")
+	public Boolean checkAndDeductStock(@PathVariable("skuId") Long skuId,
+	                                   @PathVariable("num") Integer num) {
+		return productService.checkAndDeductStock(skuId, num);
+	}
+
 	//远程调用
 	@Operation(summary = "获取商品sku信息")
 	@GetMapping("getBySkuId/{skuId}")

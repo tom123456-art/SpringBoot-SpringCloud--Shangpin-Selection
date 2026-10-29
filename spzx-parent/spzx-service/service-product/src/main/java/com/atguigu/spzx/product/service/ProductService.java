@@ -18,4 +18,12 @@ public interface ProductService {
     ProductSku getBySkuId(Long skuId);
 
     Boolean updateSkuSaleNum(List<SkuSaleDto> skuSaleDtoList);
+
+    /**
+     * 校验并原子扣减库存（防超卖）
+     * @param skuId 商品skuId
+     * @param num 购买数量
+     * @return true=扣减成功 false=库存不足
+     */
+    boolean checkAndDeductStock(Long skuId, Integer num);
 }
